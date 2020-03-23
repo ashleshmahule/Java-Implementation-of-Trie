@@ -82,7 +82,7 @@ class Trie {
 
     void suggestions(Node r, String prefix) {
 
-        if (!root.isEndOfWord) {
+        if (r.isEndOfWord) {
             System.out.println(prefix);
         }
 
