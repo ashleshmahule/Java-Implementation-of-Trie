@@ -5,6 +5,8 @@ class Main {
         Scanner sc = new Scanner(System.in);
 
         int choice = 999;
+
+        // All the keys to be added in trie
         String keys[] = { "hello", "dog", "hell", "cat", "a", "hel", "help", "help", "helping", "call", "do", "dont",
                 "dolittle", "jump", "jug" };
 
@@ -47,6 +49,8 @@ class Main {
                     break;
 
                 case 2:
+                    // sorting worst case complexity is sum of length of every string in the trie    
+
                     System.out.println();
                     ArrayList<String> sorted = trie.preorder(root, keys);
 
