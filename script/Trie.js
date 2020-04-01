@@ -183,16 +183,16 @@ class Trie {
             s = s.slice(0, level);
             console.log(s.join(""));
             var str = s.join("");
-            // ctx.moveTo(this.x + 160, this.y + 70);
-            // ctx.lineTo(this.x + 190, this.y + 100);
-            // ctx.stroke();
+
+            var ctx = canvas.getContext("2d");
 
             drawCircle(x, y + 35, str.length * 8, str);
-            x+=50;
+            x += 50;
 
         }
 
         var search = null;
+        var c=0;
 
         var count = r.children.reduce(function (n, val) {
             return n + (val === search);
@@ -200,40 +200,55 @@ class Trie {
 
         count = 26 - count;
         console.log(count);
-        
+
 
         for (var i = 0; i < this.alphabetSize; i++) {
+
             if (r.children[i] != null) {
 
                 console.log(String.fromCharCode(i + ascii('a')));
 
-                // this.ctx=this.c.getContext("2d");
-                // ctx.beginPath();
+                
                 // ctx.arc(95, 50, 40, 0, 2 * Math.PI);
                 // ctx.stroke();
 
                 s[level] = String.fromCharCode(i + ascii('a'));
-                // this.x+=5;
-                // this.y+=10;
-                // ctx.moveTo(this.x, this.y);
 
-                // ctx.moveTo(this.x, this.y);
-                // ctx.stroke();
+                var ctx = canvas.getContext("2d");
+                ctx.beginPath();
+                ctx.moveTo(x, y+35);
+                ctx.lineTo(x, y + 35*2);
+                ctx.stroke();
 
                 var str = s[level];
                 drawCircle(x, y + 35, 20, str);
 
                 this.traverse(r.children[i], s, level + 1, x, y + 35);
-                x += 50;
-            }
-            
-        }
-        
-    }
 
+                // if(count>1 && c===0) {
+                //     c++;
+                //     ctx.beginPath();
+                //     ctx.moveTo(x, y);
+                //     ctx.lineTo(x+50, y + 35);
+                //     ctx.stroke();
+                // }
+                
+                x += 50;
+
+                if(level===0) {
+                    x+=50;
+                }
+
+            }
+
+        }
+
+    }
 
 }
 
+
+//helper functions
 
 function ascii(a) {
     return a.charCodeAt(0);
