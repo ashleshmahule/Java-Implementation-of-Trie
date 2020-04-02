@@ -2,9 +2,10 @@
   "name": "java-implementation-of-trie",
   "version": "1.0.0",
   "description": "Implementation of trie using Java with auto complete and sort functions",
-  "main": "Node.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "none",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -12,12 +13,16 @@
   },
   "keywords": [
     "trie",
-    "simulation"
+    "simulation",
+    "java"
   ],
   "author": "ashlesh mahule",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ashleshmahule/Java-Implementation-of-Trie/issues"
   },
-  "homepage": "https://github.com/ashleshmahule/Java-Implementation-of-Trie#readme"
+  "homepage": "https://github.com/ashleshmahule/Java-Implementation-of-Trie#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
