@@ -1,5 +1,6 @@
 var canvas = document.getElementById("mycanvas");
 var ctx = canvas.getContext("2d");
+var suggestions=[];
 
 function drawCircle(x, y, w, text) {
     ctx.beginPath();
@@ -97,7 +98,7 @@ class Trie {
         r.children[index] = delete(r.children[index], key, level + 1);
 
         // node does'nt have any child, and it is not end of word.
-        if (isLastNode(r) && !r.isEndOfWord) {
+        if (this.isLastNode(r) && !r.isEndOfWord) {
             r = null;
         }
         return r;
@@ -106,22 +107,22 @@ class Trie {
     suggestions(r, prefix) {
 
         if (r.isEndOfWord) {
+            suggestions.push(prefix);
             console.log(prefix);
         }
 
-        if (isLastNode(r)) {
+        if (this.isLastNode(r)) {
             return;
         }
 
         for (var i = 0; i < this.alphabetSize; i++) {
             if (r.children[i] != null) {
                 // append current char
-                prefix = prefix + String.fromCharCode('a' + i);
-
-                suggestions(r.children[i], prefix);
+                prefix = prefix + String.fromCharCode(ascii('a') + i);
+                this.suggestions(r.children[i], prefix);
 
                 // remove the last char
-                prefix = prefix.substring(0, prefix.length() - 1);
+                prefix = prefix.substring(0, prefix.length - 1);
             }
         }
 
@@ -142,16 +143,16 @@ class Trie {
 
         // if prefix is present as a word, but there is no subtree below the last
         // matching node.
-        if (pCrawl.isEndOfWord && isLastNode(pCrawl)) {
+        if (pCrawl.isEndOfWord && this.isLastNode(pCrawl)) {
             // console.log(text);
             return -1;
         }
 
         // if there are nodes below last matching character
-        if (!isLastNode(pCrawl)) {
+        if (!this.isLastNode(pCrawl)) {
             var prefix = text;
             console.log("\nSuggestions are: ");
-            suggestions(pCrawl, prefix);
+            this.suggestions(pCrawl, prefix);
             return 1;
         }
         return -1;
@@ -292,16 +293,67 @@ var i = 0;
 
 function addNewNode() {
     ctx.clearRect(0, 0, canvas.clientWidth, canvas.height);
-    trie.x = 50;
-    trie.y = 50;
-    var key = $('#key').val();
-    $('#key').val('');
+    
+    var key1 = $('#key1').val();
+    var key2 = $('#key2').val();
+    var key3 = $('#key3').val();
+    var key4 = $('#key4').val();
 
-    trie.insert(key, i++);
+    trie.insert(key1,0);
+    trie.insert(key2,1);
+    trie.insert(key3,2);
+    trie.insert(key4,3);
     var s = [];
     trie.traverse(root, s, 0, 50, 50);
     console.log(trie);
     console.log();
+    
+}
 
-    $('#parent')
+function autoSuggestion() {
+
+    var keyword=$('#keyword').val();
+    trie.displaySuggestions(root,keyword);
+    console.log(suggestions);
+    var x=document.createElement('h5');
+    x.id="tsa";
+    x.textContent="The Sugestions Are: "
+    document.getElementById('start').appendChild(x);
+    document.getElementById('start').appendChild(makeUL(suggestions));
+}
+
+function makeUL(array) {
+    // Create the list element:
+    list=document.getElementById("suggestions");
+    for (var i = 0; i < array.length; i++) {
+        // Create the list item:
+        var item = document.createElement('li');
+        item.className="list-group-item";
+
+        // Set its contents:
+        item.appendChild(document.createTextNode(array[i]));
+
+        // Add it to the list:
+        list.appendChild(item);
+    }
+
+    // Finally, return the constructed list:
+    return list;
+}
+
+function clearAll() {
+    $('#key1').val('');
+    $('#key2').val('');
+    $('#key3').val('');
+    $('#key4').val('');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    $('#keyword').val('');
+    $('#tsa').text('');
+
+    $('#suggestions').empty();
+
+    root = new Node(26);
+    trie = new Trie(root, 26);
 }
