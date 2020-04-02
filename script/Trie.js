@@ -1,6 +1,8 @@
 var canvas = document.getElementById("mycanvas");
 var ctx = canvas.getContext("2d");
-var suggestions=[];
+var suggestions = [];
+var prvlevel;
+var flag = false;
 
 function drawCircle(x, y, w, text) {
     ctx.beginPath();
@@ -15,6 +17,13 @@ function drawCircle(x, y, w, text) {
     ctx.fillStyle = 'black';
     ctx.textAlign = 'center';
     ctx.fillText(text, x, y + 3);
+}
+
+function colorCircle() {
+    ctx.beginPath();
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
+    ctx.stroke();
 }
 
 class Trie {
@@ -178,6 +187,7 @@ class Trie {
     }
 
     // level order traversal
+
     traverse(r, s, level, x, y) {
 
         if (r.isEndOfWord) {
@@ -187,57 +197,82 @@ class Trie {
 
             var ctx = canvas.getContext("2d");
 
-            drawCircle(x, y + 35, str.length * 8, str);
-            x += 50;
+            drawCircle(x, y + 60, str.length * 9.5, str);
+            x += 55;
 
         }
 
+
+
         var search = null;
-        var c=0;
+        var c = 0;
 
         var count = r.children.reduce(function (n, val) {
             return n + (val === search);
         }, 0);
 
         count = 26 - count;
-        console.log(count);
+        // console.log(count);
 
 
         for (var i = 0; i < this.alphabetSize; i++) {
-
             if (r.children[i] != null) {
 
-                console.log(String.fromCharCode(i + ascii('a')));
+                // console.log(String.fromCharCode(i + ascii('a')));
 
-                
+
                 // ctx.arc(95, 50, 40, 0, 2 * Math.PI);
                 // ctx.stroke();
+
+                if (level === 0) {
+                    ctx.beginPath();
+                    ctx.moveTo(300, 45);
+                    ctx.lineTo(x, y + 60);
+                    ctx.stroke();
+                    var rstring = "Root (Empty)";
+                    drawCircle(300, 45, rstring.length * 7, rstring);
+                }
 
                 s[level] = String.fromCharCode(i + ascii('a'));
 
                 var ctx = canvas.getContext("2d");
                 ctx.beginPath();
-                ctx.moveTo(x, y+35);
-                ctx.lineTo(x, y + 35*2);
+                ctx.moveTo(x, y + 60);
+                ctx.lineTo(x, y + 60 * 2);
                 ctx.stroke();
 
                 var str = s[level];
-                drawCircle(x, y + 35, 20, str);
+                drawCircle(x, y + 60, 30, str);
 
-                this.traverse(r.children[i], s, level + 1, x, y + 35);
+                prvlevel = level;
 
-                // if(count>1 && c===0) {
+                this.traverse(r.children[i], s, level + 1, x, y + 60);
+
+                // if (count > 1 && c === 0) {
                 //     c++;
                 //     ctx.beginPath();
                 //     ctx.moveTo(x, y);
-                //     ctx.lineTo(x+50, y + 35);
+                //     ctx.lineTo(x + 55, y + 60);
                 //     ctx.stroke();
                 // }
-                
-                x += 50;
 
-                if(level===0) {
-                    x+=50;
+                console.log(prvlevel + " " + level);
+
+                // if(prvlevel===level+1) {
+                //     x += 60;
+                //     if(level===0) {
+                //         x+=60;
+                //     }
+                //     flag=true;
+                // }
+                // else {
+                //     flag=false;
+                // }
+
+                x += 60;
+
+                if (level === 0) {
+                    x += 60;
                 }
 
             }
@@ -292,52 +327,47 @@ var keys = ["hello", "dog", "hell", "cat", "a", "hel", "help", "help", "helping"
 var i = 0;
 
 function addNewNode() {
-    ctx.clearRect(0, 0, canvas.clientWidth, canvas.height);
-    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var r = "Root (Empty)";
+    drawCircle(300, 45, r.length * 7, r);
+
     var key1 = $('#key1').val();
     var key2 = $('#key2').val();
     var key3 = $('#key3').val();
     var key4 = $('#key4').val();
 
-    trie.insert(key1,0);
-    trie.insert(key2,1);
-    trie.insert(key3,2);
-    trie.insert(key4,3);
+    trie.insert(key1, 0);
+    trie.insert(key2, 1);
+    trie.insert(key3, 2);
+    trie.insert(key4, 3);
     var s = [];
-    trie.traverse(root, s, 0, 50, 50);
+    trie.traverse(root, s, 0, 80, 80);
     console.log(trie);
     console.log();
-    
 }
 
 function autoSuggestion() {
-
-    var keyword=$('#keyword').val();
-    trie.displaySuggestions(root,keyword);
+    var keyword = $('#keyword').val();
+    trie.displaySuggestions(root, keyword);
     console.log(suggestions);
-    var x=document.createElement('h5');
-    x.id="tsa";
-    x.textContent="The Sugestions Are: "
+    var x = document.createElement('h5');
+    x.id = "tsa";
+    x.textContent = "The Sugestions Are: "
     document.getElementById('start').appendChild(x);
     document.getElementById('start').appendChild(makeUL(suggestions));
 }
 
 function makeUL(array) {
-    // Create the list element:
-    list=document.getElementById("suggestions");
+    list = document.getElementById("suggestions");
     for (var i = 0; i < array.length; i++) {
-        // Create the list item:
         var item = document.createElement('li');
-        item.className="list-group-item";
+        item.className = "list-group-item";
 
-        // Set its contents:
         item.appendChild(document.createTextNode(array[i]));
 
-        // Add it to the list:
         list.appendChild(item);
     }
 
-    // Finally, return the constructed list:
     return list;
 }
 
