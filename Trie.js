@@ -195,8 +195,6 @@ class Trie {
             console.log(s.join(""));
             var str = s.join("");
 
-            var ctx = canvas.getContext("2d");
-
             drawCircle(x, y + 60, str.length * 9.5, str);
             x += 55;
 
