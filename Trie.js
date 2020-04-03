@@ -235,7 +235,6 @@ class Trie {
 
                 s[level] = String.fromCharCode(i + ascii('a'));
 
-                var ctx = canvas.getContext("2d");
                 ctx.beginPath();
                 ctx.moveTo(x, y + 60);
                 ctx.lineTo(x, y + 60 * 2);
